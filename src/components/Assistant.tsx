@@ -9,11 +9,17 @@ interface Message {
   isError?: boolean;
 }
 
+const QUICK_PROMPTS = [
+  "How do I check my voter registration?",
+  "What ID is valid on polling day?",
+  "I lost my Voter ID — can I still vote?",
+];
+
 export const Assistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hello. I am ElectionEdu AI, your intelligent guide to the democratic process. I am powered by Google Gemini to provide you with verified, context-aware information. How can I help you today?",
+      content: "Jai Hind! 🇮🇳 I'm ElectionEdu AI, powered by Google Gemini. I can help you with voter registration, polling procedures, candidate information, and your constitutional rights. What would you like to know?",
     }
   ]);
   const [input, setInput] = useState('');
@@ -26,22 +32,21 @@ export const Assistant: React.FC = () => {
     }
   }, [messages, isTyping]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isTyping) return;
-
-    const userMsg: Message = { role: 'user', content: input };
+  const handleSend = async (text?: string) => {
+    const query = text || input;
+    if (!query.trim() || isTyping) return;
+    const userMsg: Message = { role: 'user', content: query };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
-
     try {
-      const response = await chatWithGemini(input);
+      const response = await chatWithGemini(query);
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "I encountered a synchronization error. Please check your network or API configuration.", 
-        isError: true 
+    } catch {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "I'm having trouble connecting. Please check your network and try again.",
+        isError: true
       }]);
     } finally {
       setIsTyping(false);
@@ -49,109 +54,132 @@ export const Assistant: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel flex flex-col h-[600px] overflow-hidden border-white/10 shadow-2xl">
-      {/* Chat Header */}
-      <div className="p-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
-             <Bot size={24} />
+    <div className="card-elevated flex flex-col h-[520px] overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5"
+        style={{ background: 'rgba(10,14,26,0.6)' }}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ background: 'rgba(6,167,125,0.15)', border: '1px solid rgba(6,167,125,0.3)' }}>
+            <Bot size={20} style={{ color: '#0CC594' }} />
           </div>
           <div>
-            <h3 className="text-sm font-black uppercase tracking-widest text-white">Gemini 1.5 Pro</h3>
-            <div className="flex items-center gap-2">
-               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">System Online</span>
+            <p className="text-sm font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>ElectionEdu AI</p>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">Gemini 1.5 Flash • Online</span>
             </div>
           </div>
         </div>
-        <button 
+        <button
           onClick={() => setMessages([messages[0]])}
-          className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/10 transition-all border border-white/5"
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-white transition-colors"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+          title="Reset chat"
         >
-          <RefreshCcw size={18} />
+          <RefreshCcw size={15} />
         </button>
       </div>
 
-      {/* Messages Area */}
-      <div 
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto p-8 space-y-8 scroll-smooth"
-      >
+      {/* Quick Prompts (only when fresh) */}
+      {messages.length === 1 && (
+        <div className="px-4 py-3 border-b border-white/5 flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+          {QUICK_PROMPTS.map((p) => (
+            <button
+              key={p}
+              onClick={() => handleSend(p)}
+              className="flex-shrink-0 text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-all hover:-translate-y-0.5"
+              style={{ background: 'rgba(6,167,125,0.08)', border: '1px solid rgba(6,167,125,0.2)', color: '#0CC594', whiteSpace: 'nowrap' }}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                <div className={`w-10 h-10 rounded-2xl flex-shrink-0 flex items-center justify-center border ${
-                  msg.role === 'user' 
-                    ? 'bg-white text-black border-white' 
-                    : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
-                }`}>
-                  {msg.role === 'user' ? <User size={18} /> : <Sparkles size={18} />}
-                </div>
-                <div className={`p-5 rounded-3xl text-sm leading-relaxed ${
-                  msg.role === 'user'
-                    ? 'bg-white text-black font-medium'
-                    : msg.isError 
-                      ? 'bg-red-500/10 border border-red-500/20 text-red-200' 
-                      : 'bg-white/[0.03] border border-white/5 text-slate-200'
-                }`}>
-                  {msg.content}
-                </div>
+              <div className="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center"
+                style={{
+                  background: msg.role === 'user' ? 'rgba(0,82,204,0.2)' : 'rgba(6,167,125,0.12)',
+                  border: msg.role === 'user' ? '1px solid rgba(0,82,204,0.3)' : '1px solid rgba(6,167,125,0.2)',
+                  color: msg.role === 'user' ? '#6B9FFF' : '#0CC594',
+                }}>
+                {msg.role === 'user' ? <User size={15} /> : <Sparkles size={15} />}
+              </div>
+              <div
+                className="max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed"
+                style={{
+                  background: msg.role === 'user'
+                    ? 'linear-gradient(135deg, rgba(0,53,128,0.5), rgba(0,82,204,0.3))'
+                    : msg.isError
+                      ? 'rgba(239,68,68,0.1)'
+                      : 'rgba(20,29,53,0.9)',
+                  border: msg.role === 'user'
+                    ? '1px solid rgba(0,82,204,0.3)'
+                    : msg.isError
+                      ? '1px solid rgba(239,68,68,0.2)'
+                      : '1px solid rgba(255,255,255,0.06)',
+                  color: msg.isError ? '#FCA5A5' : '#E8EDF5',
+                  borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                }}
+              >
+                {msg.content}
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
-        
+
         {isTyping && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex justify-start"
-          >
-             <div className="flex gap-4 items-center">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 animate-pulse">
-                   <Bot size={18} />
-                </div>
-                <div className="flex gap-1.5 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
-             </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+            <div className="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center animate-pulse"
+              style={{ background: 'rgba(6,167,125,0.12)', border: '1px solid rgba(6,167,125,0.2)', color: '#0CC594' }}>
+              <Bot size={15} />
+            </div>
+            <div className="px-4 py-3 rounded-2xl flex items-center gap-1.5"
+              style={{ background: 'rgba(20,29,53,0.9)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              {[0, 150, 300].map(delay => (
+                <motion.div key={delay} className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: '#0CC594' }}
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.8, delay: delay / 1000 }} />
+              ))}
+            </div>
           </motion.div>
         )}
       </div>
 
-      {/* Input Area */}
-      <div className="p-8 bg-white/[0.01] border-t border-white/5">
-        <div className="relative flex gap-4">
+      {/* Input */}
+      <div className="px-4 pb-4 pt-2 border-t border-white/5">
+        <div className="flex items-center gap-3">
           <input
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask about voter rights, registration, or polling..."
-            className="input-noir pr-32"
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSend()}
+            placeholder="Ask about voting, registration, candidates..."
+            className="input-field py-3 text-sm flex-1"
           />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-            <button 
-              onClick={handleSend}
-              disabled={!input.trim() || isTyping}
-              className="w-12 h-12 rounded-xl bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
-            >
-              <Send size={18} />
-            </button>
-          </div>
+          <button
+            onClick={() => handleSend()}
+            disabled={!input.trim() || isTyping}
+            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ background: 'linear-gradient(135deg, #FF8C00, #FF6B00)', color: 'white', boxShadow: '0 4px 15px rgba(255,140,0,0.3)' }}
+          >
+            <Send size={17} />
+          </button>
         </div>
-        <div className="mt-4 flex items-center justify-center gap-3">
-           <Terminal size={12} className="text-slate-600" />
-           <p className="text-[10px] text-slate-600 font-bold uppercase tracking-[0.2em]">End-to-End Encrypted Verification Portal</p>
-        </div>
+        <p className="text-center text-[10px] text-slate-600 mt-2 flex items-center justify-center gap-1">
+          <Terminal size={10} /> Powered by Google Gemini • Information verified against ECI guidelines
+        </p>
       </div>
     </div>
   );

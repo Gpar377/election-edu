@@ -1,45 +1,58 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import { UserPlus, UserCheck, Megaphone, Vote, BarChart3 } from 'lucide-react';
 
 const STEPS = [
-  { id: '01', title: 'Registration', desc: 'Secure your spot on the electoral roll.', icon: UserPlus },
-  { id: '02', title: 'Nomination', desc: 'Candidates file and verify credentials.', icon: UserCheck },
-  { id: '03', title: 'Campaigning', desc: 'Parties reach out with their vision.', icon: Megaphone },
-  { id: '04', title: 'Polling Day', desc: 'Cast your vote at the designated booth.', icon: Vote },
-  { id: '05', title: 'Results', desc: 'The voice of the people is declared.', icon: BarChart3 },
+  { id: '01', title: 'Registration', desc: 'Enroll on the electoral roll via NVSP or BLO.', icon: UserPlus, color: '#FF8C00' },
+  { id: '02', title: 'Nomination', desc: 'Candidates file Form 2B with the Returning Officer.', icon: UserCheck, color: '#6B9FFF' },
+  { id: '03', title: 'Campaigning', desc: 'Parties reach voters within the Model Code period.', icon: Megaphone, color: '#FFA742' },
+  { id: '04', title: 'Polling Day', desc: 'Cast your vote at the designated EVM booth.', icon: Vote, color: '#0CC594' },
+  { id: '05', title: 'Results', desc: 'Votes counted; winners declared by the ECI.', icon: BarChart3, color: '#6B9FFF' },
 ];
 
 export const Timeline: React.FC = () => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-50px' });
+
   return (
-    <div className="relative pt-12 pb-8">
-      <div className="timeline-line hidden lg:block" />
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 relative z-10">
-        {STEPS.map((step, index) => {
+    <div ref={ref} className="relative">
+      {/* Connecting Line */}
+      <div className="hidden lg:block absolute top-10 left-10 right-10 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,140,0,0.3), rgba(255,255,255,0.1), rgba(6,167,125,0.3), transparent)' }} />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        {STEPS.map((step, i) => {
           const Icon = step.icon;
           return (
-            <motion.div 
+            <motion.div
               key={step.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group text-center flex flex-col items-center"
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className="group"
             >
-              <div className="relative mb-8">
-                <div className="w-20 h-20 rounded-3xl bg-white/[0.03] border border-white/5 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:bg-white/[0.08] group-hover:border-indigo-500/50 shadow-2xl">
-                  <Icon size={32} className="text-slate-400 transition-colors duration-500 group-hover:text-indigo-400" />
+              <div className="card p-5 hover:border-white/15 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden">
+                {/* Step number */}
+                <div className="text-[10px] font-bold uppercase tracking-widest mb-4"
+                  style={{ color: step.color, letterSpacing: '0.15em' }}>
+                  Step {step.id}
                 </div>
-                <div className="absolute -top-3 -right-3 w-8 h-8 rounded-xl bg-black border border-white/10 flex items-center justify-center text-[10px] font-black text-indigo-500 shadow-xl group-hover:border-indigo-500/50 transition-colors">
-                  {step.id}
+
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: `${step.color}15`, color: step.color }}>
+                  <Icon size={24} />
                 </div>
+
+                <h3 className="font-bold text-white text-sm mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                  {step.title}
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
+
+                {/* Bottom accent */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ background: `linear-gradient(90deg, transparent, ${step.color}, transparent)` }} />
               </div>
-              <h3 className="text-lg font-black mb-3 text-white uppercase tracking-tighter group-hover:text-indigo-400 transition-colors">{step.title}</h3>
-              <p className="text-sm text-slate-500 font-medium px-4 leading-relaxed group-hover:text-slate-400 transition-colors">
-                {step.desc}
-              </p>
-              
-              <div className="mt-8 timeline-dot hidden lg:block opacity-0 group-hover:opacity-100 transition-opacity" />
             </motion.div>
           );
         })}
