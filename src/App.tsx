@@ -7,10 +7,24 @@ import { VoterReadiness } from './components/VoterReadiness';
 import { Vote, ArrowRight, ShieldCheck, Globe, Users, FileText, HelpCircle } from 'lucide-react';
 
 const STATS = [
-  { value: '96.8Cr', label: 'Registered Voters', color: 'saffron' },
-  { value: '10.5L', label: 'Polling Stations', color: 'blue' },
-  { value: '543', label: 'Lok Sabha Seats', color: 'teal' },
+  { value: '96.8Cr', label: 'Registered Voters', color: 'saffron', delay: 0.5 },
+  { value: '10.5L', label: 'Polling Stations', color: 'blue', delay: 0.6 },
+  { value: '543', label: 'Lok Sabha Seats', color: 'teal', delay: 0.7 },
 ];
+
+const FloatingOrb = ({ color, size, top, left, delay, duration }: any) => (
+  <motion.div
+    className="absolute rounded-full mix-blend-screen filter blur-[80px] opacity-30"
+    style={{ background: color, width: size, height: size, top, left }}
+    animate={{
+      y: [0, -30, 0],
+      x: [0, 20, 0],
+      scale: [1, 1.1, 1],
+      opacity: [0.2, 0.4, 0.2]
+    }}
+    transition={{ duration, repeat: Infinity, delay, ease: "easeInOut" }}
+  />
+);
 
 function App() {
   const { scrollYProgress } = useScroll();
@@ -48,14 +62,19 @@ function App() {
           <div className="hidden md:flex items-center gap-8">
             {['Process', 'Locator', 'AI Guide'].map((item) => (
               <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="text-[12px] font-semibold text-slate-400 hover:text-white transition-colors uppercase tracking-widest">
+                className="text-[12px] font-semibold text-slate-400 hover:text-white transition-colors uppercase tracking-widest relative group">
                 {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-saffron-500 transition-all group-hover:w-full" style={{ background: '#FF8C00' }}></span>
               </a>
             ))}
             <div className="w-px h-5 bg-white/10" />
-            <button className="btn-primary text-xs py-2.5 px-5">
-              Get Started <ArrowRight size={14} />
-            </button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-primary text-xs py-2.5 px-5 group"
+            >
+              Get Started <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </motion.button>
           </div>
         </div>
       </nav>
@@ -65,10 +84,24 @@ function App() {
         <section className="relative pt-20 pb-16 px-8 overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-10"
-              style={{ background: 'radial-gradient(circle, #FF8C00 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8"
-              style={{ background: 'radial-gradient(circle, #0052CC 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }} />
+            <FloatingOrb color="#FF8C00" size="600px" top="-20%" left="60%" delay={0} duration={15} />
+            <FloatingOrb color="#0052CC" size="500px" top="40%" left="-10%" delay={2} duration={18} />
+            <FloatingOrb color="#06A77D" size="400px" top="60%" left="70%" delay={4} duration={20} />
+            
+            {/* Subtle Ashoka Chakra watermark */}
+            <motion.div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none mix-blend-overlay"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+            >
+              <svg width="800" height="800" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
+                <circle cx="50" cy="50" r="48" />
+                <circle cx="50" cy="50" r="40" />
+                {Array.from({ length: 24 }).map((_, i) => (
+                  <line key={i} x1="50" y1="50" x2="50" y2="2" transform={`rotate(${i * 15} 50 50)`} />
+                ))}
+              </svg>
+            </motion.div>
           </div>
 
           <div className="container relative">
@@ -85,13 +118,22 @@ function App() {
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="heading-serif mb-6"
+                transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
+                className="heading-serif mb-6 relative z-10"
                 style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', lineHeight: '1.0' }}
               >
                 Your Voice,{' '}
-                <span style={{ background: 'linear-gradient(135deg, #FF8C00, #FFC45E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  India's
+                <span className="relative inline-block">
+                  <span className="absolute -inset-2 bg-gradient-to-r from-[#FF8C00]/20 via-[#FFC45E]/20 to-[#FF8C00]/20 blur-xl rounded-full opacity-50 animate-pulse"></span>
+                  <span style={{ 
+                    background: 'linear-gradient(to right, #FF8C00, #FFC45E, #FF8C00)', 
+                    backgroundSize: '200% auto',
+                    WebkitBackgroundClip: 'text', 
+                    WebkitTextFillColor: 'transparent',
+                    animation: 'shine 3s linear infinite'
+                  }}>
+                    India's
+                  </span>
                 </span>
                 {' '}Future
               </motion.h1>
@@ -118,14 +160,22 @@ function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+                className="flex flex-col sm:flex-row gap-4 justify-center mb-16 relative z-10"
               >
-                <button className="btn-primary">
-                  Check Your Readiness <ArrowRight size={16} />
-                </button>
-                <button className="btn-secondary">
-                  <Globe size={16} /> Find Polling Booth
-                </button>
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -2, boxShadow: '0 10px 30px -10px rgba(255, 140, 0, 0.6)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-primary group"
+                >
+                  Check Your Readiness <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -2, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-secondary group"
+                >
+                  <Globe size={16} className="transition-transform group-hover:rotate-12" /> Find Polling Booth
+                </motion.button>
               </motion.div>
 
               {/* Stats */}
@@ -134,18 +184,20 @@ function App() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5, staggerChildren: 0.1 }}
-                className="grid grid-cols-3 gap-4 max-w-2xl mx-auto"
+                className="grid grid-cols-3 gap-4 max-w-2xl mx-auto relative z-10"
               >
-                {STATS.map((s, i) => (
+                {STATS.map((s) => (
                   <motion.div
                     key={s.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.5 + i * 0.1 }}
-                    className={`card-${s.color === 'saffron' ? 'saffron' : s.color === 'teal' ? 'teal' : 'blue'} p-5 text-center`}
+                    transition={{ delay: s.delay, duration: 0.6, ease: "easeOut" }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className={`card-${s.color === 'saffron' ? 'saffron' : s.color === 'teal' ? 'teal' : 'blue'} p-5 text-center relative overflow-hidden group cursor-default`}
                   >
-                    <div className="stat-number text-2xl mb-1 text-white">{s.value}</div>
-                    <div className="text-[11px] text-slate-500 font-semibold uppercase tracking-widest">{s.label}</div>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
+                    <div className="stat-number text-3xl mb-1 text-white group-hover:scale-110 transition-transform duration-300 transform origin-bottom">{s.value}</div>
+                    <div className="text-[11px] text-slate-500 font-semibold uppercase tracking-widest mt-2">{s.label}</div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -222,8 +274,15 @@ function App() {
               ].map((fact) => {
                 const Icon = fact.icon;
                 return (
-                  <div key={fact.title} className={`card-${fact.color} p-5 flex gap-4`}>
-                    <div className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
+                  <motion.div 
+                    key={fact.title} 
+                    whileHover={{ y: -5, scale: 1.02 }}
+                    className={`card-${fact.color} p-5 flex gap-4 cursor-default transition-all duration-300 hover:shadow-lg`}
+                    style={{ 
+                      boxShadow: fact.color === 'saffron' ? '0 10px 30px -10px rgba(255,140,0,0)' : 'none'
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
                       style={{
                         background: fact.color === 'saffron' ? 'rgba(255,140,0,0.15)' : fact.color === 'blue' ? 'rgba(0,82,204,0.15)' : 'rgba(6,167,125,0.15)',
                         color: fact.color === 'saffron' ? '#FFA742' : fact.color === 'blue' ? '#6B9FFF' : '#0CC594'
@@ -234,7 +293,7 @@ function App() {
                       <h3 className="text-sm font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{fact.title}</h3>
                       <p className="text-xs text-slate-500 leading-relaxed">{fact.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

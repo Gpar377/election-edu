@@ -58,6 +58,11 @@ ul { list-style: none; }
     radial-gradient(ellipse 40% 60% at 50% 100%, rgba(6, 167, 125, 0.08) 0%, transparent 50%);
 }
 
+@keyframes shine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 /* ─── Container ─── */
 .container {
   width: 100%;
