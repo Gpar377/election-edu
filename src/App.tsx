@@ -81,7 +81,7 @@ function App() {
 
       <main className="relative z-10">
         {/* ─── Hero ─── */}
-        <section className="relative pt-32 pb-24 px-8 overflow-hidden">
+        <section className="relative pt-32 pb-24 px-8">
           {/* Background decoration */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <FloatingOrb color="#FF8C00" size="600px" top="-20%" left="60%" delay={0} duration={15} />
