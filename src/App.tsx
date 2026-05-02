@@ -52,10 +52,10 @@ function App() {
               <Vote size={22} className="text-white" />
             </div>
             <div>
-              <div className="text-lg font-bold tracking-tight text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              <div className="text-xl font-bold tracking-tight text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
                 Election<span style={{ color: '#FF8C00' }}>Edu</span>
               </div>
-              <div className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold">AI-Powered Civic Portal</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-widest font-medium">AI-Powered Civic Portal</div>
             </div>
           </div>
 
@@ -81,7 +81,7 @@ function App() {
 
       <main className="relative z-10">
         {/* ─── Hero ─── */}
-        <section className="relative pt-20 pb-16 px-8 overflow-hidden">
+        <section className="relative pt-32 pb-24 px-8 overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <FloatingOrb color="#FF8C00" size="600px" top="-20%" left="60%" delay={0} duration={15} />
@@ -142,7 +142,7 @@ function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-slate-400 text-lg mb-6 max-w-2xl mx-auto leading-relaxed"
+                className="text-slate-400 text-xl mb-10 max-w-3xl mx-auto leading-relaxed"
               >
                 India's first AI-native election portal — combining Google Gemini intelligence
                 with real-time polling station data to make democracy more accessible for every citizen.
@@ -160,7 +160,7 @@ function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center mb-16 relative z-10"
+                className="flex flex-col sm:flex-row gap-6 justify-center mb-20 relative z-10"
               >
                 <motion.button 
                   whileHover={{ scale: 1.05, y: -2, boxShadow: '0 10px 30px -10px rgba(255, 140, 0, 0.6)' }}
@@ -184,7 +184,7 @@ function App() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5, staggerChildren: 0.1 }}
-                className="grid grid-cols-3 gap-4 max-w-2xl mx-auto relative z-10"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto relative z-10"
               >
                 {STATS.map((s) => (
                   <motion.div
@@ -193,11 +193,11 @@ function App() {
                     animate={statsInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: s.delay, duration: 0.6, ease: "easeOut" }}
                     whileHover={{ y: -8, scale: 1.02 }}
-                    className={`card-${s.color === 'saffron' ? 'saffron' : s.color === 'teal' ? 'teal' : 'blue'} p-5 text-center relative overflow-hidden group cursor-default`}
+                    className={`card-${s.color === 'saffron' ? 'saffron' : s.color === 'teal' ? 'teal' : 'blue'} p-8 text-center relative overflow-hidden group cursor-default`}
                   >
                     <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" />
-                    <div className="stat-number text-3xl mb-1 text-white group-hover:scale-110 transition-transform duration-300 transform origin-bottom">{s.value}</div>
-                    <div className="text-[11px] text-slate-500 font-semibold uppercase tracking-widest mt-2">{s.label}</div>
+                    <div className="stat-number text-4xl mb-3 text-white group-hover:scale-110 transition-transform duration-300 transform origin-bottom">{s.value}</div>
+                    <div className="text-xs text-slate-400 font-medium uppercase tracking-widest mt-2">{s.label}</div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -206,57 +206,59 @@ function App() {
         </section>
 
         {/* ─── Voter Readiness ─── */}
-        <section className="py-20 px-8">
-          <div className="container">
-            <div className="flex items-center gap-3 mb-12">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255,140,0,0.15)', border: '1px solid rgba(255,140,0,0.3)' }}>
-                <ShieldCheck size={18} style={{ color: '#FF8C00' }} />
+        <section className="py-28 px-8">
+          <div className="container max-w-5xl">
+            <div className="flex flex-col items-center text-center mb-16">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6" style={{ background: 'rgba(255,140,0,0.1)', border: '1px solid rgba(255,140,0,0.2)' }}>
+                <ShieldCheck size={24} style={{ color: '#FF8C00' }} />
               </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Voter Readiness Dashboard</h2>
-                <p className="text-sm text-slate-500">Track your preparedness before polling day</p>
-              </div>
+              <h2 className="heading-serif text-4xl text-white mb-4">Voter Readiness Dashboard</h2>
+              <p className="text-lg text-slate-400 max-w-2xl">Track your preparedness before polling day to ensure a smooth and hassle-free voting experience.</p>
             </div>
             <VoterReadiness />
           </div>
         </section>
 
         {/* ─── Election Lifecycle ─── */}
-        <section id="process" className="py-20 px-8 border-t border-white/5" style={{ background: 'rgba(15,22,40,0.5)' }}>
-          <div className="container">
-            <div className="mb-12">
-              <div className="badge badge-blue mb-4">
-                <FileText size={12} /> Electoral Process
+        <section id="process" className="py-28 px-8 border-t border-white/5" style={{ background: 'rgba(15,22,40,0.5)' }}>
+          <div className="container max-w-6xl">
+            <div className="flex flex-col items-center text-center mb-20">
+              <div className="badge badge-blue mb-6">
+                <FileText size={14} /> Electoral Process
               </div>
-              <h2 className="heading-serif text-4xl text-white mb-3">Election Lifecycle</h2>
-              <p className="text-slate-500 max-w-xl">From voter registration to result declaration — every stage of India's democratic process, explained.</p>
-              <div className="tricolor-bar w-24 mt-4" />
+              <h2 className="heading-serif text-5xl text-white mb-6">Election Lifecycle</h2>
+              <p className="text-lg text-slate-400 max-w-2xl">From voter registration to result declaration — every stage of India's democratic process, explained clearly.</p>
+              <div className="tricolor-bar w-32 mt-8" />
             </div>
             <Timeline />
           </div>
         </section>
 
         {/* ─── Locator & Assistant ─── */}
-        <section className="py-20 px-8">
-          <div className="container">
-            <div className="grid lg:grid-cols-2 gap-12">
+        <section className="py-28 px-8">
+          <div className="container max-w-7xl">
+            <div className="grid lg:grid-cols-2 gap-16 xl:gap-24">
               {/* Polling Locator */}
-              <div id="locator">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="badge badge-blue"><Globe size={11} /> Google Services</div>
+              <div id="locator" className="flex flex-col h-full">
+                <div className="mb-10">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="badge badge-blue"><Globe size={14} /> Google Services</div>
+                  </div>
+                  <h2 className="heading-serif text-4xl text-white mb-4">Find Your Booth</h2>
+                  <p className="text-slate-400 text-lg leading-relaxed">Real-time polling station discovery with live crowd estimates and seamless navigation to ensure you avoid the rush.</p>
                 </div>
-                <h2 className="heading-serif text-3xl text-white mb-2">Find Your Booth</h2>
-                <p className="text-slate-500 text-sm mb-6">Real-time polling station discovery with live crowd estimates and navigation.</p>
                 <PollingLocator />
               </div>
 
               {/* AI Assistant */}
-              <div id="ai-guide">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="badge badge-teal"><ShieldCheck size={11} /> Gemini 1.5 Flash</div>
+              <div id="ai-guide" className="flex flex-col h-full">
+                <div className="mb-10">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="badge badge-teal"><ShieldCheck size={14} /> Gemini 1.5 Flash</div>
+                  </div>
+                  <h2 className="heading-serif text-4xl text-white mb-4">Ask Your AI Guide</h2>
+                  <p className="text-slate-400 text-lg leading-relaxed">Your personal expert on voter rights, election laws, and candidate information — available instantly to clarify any doubts.</p>
                 </div>
-                <h2 className="heading-serif text-3xl text-white mb-2">Ask Your AI Guide</h2>
-                <p className="text-slate-500 text-sm mb-6">Your expert on voter rights, election law, and candidate information — always available.</p>
                 <Assistant />
               </div>
             </div>
@@ -264,9 +266,9 @@ function App() {
         </section>
 
         {/* ─── Quick Facts Banner ─── */}
-        <section className="py-12 px-8 border-t border-b border-white/5" style={{ background: 'rgba(0,53,128,0.08)' }}>
-          <div className="container">
-            <div className="grid md:grid-cols-3 gap-6">
+        <section className="py-20 px-8 border-t border-b border-white/5" style={{ background: 'rgba(0,53,128,0.05)' }}>
+          <div className="container max-w-6xl">
+            <div className="grid md:grid-cols-3 gap-8">
               {[
                 { icon: Users, title: 'Who Can Vote?', desc: 'Any Indian citizen aged 18+ enrolled in the electoral roll of their constituency.', color: 'saffron' },
                 { icon: ShieldCheck, title: 'Valid ID Documents', desc: 'EPIC Card, Aadhaar, Passport, Driving Licence, or any ECI-approved document.', color: 'blue' },
@@ -276,22 +278,22 @@ function App() {
                 return (
                   <motion.div 
                     key={fact.title} 
-                    whileHover={{ y: -5, scale: 1.02 }}
-                    className={`card-${fact.color} p-5 flex gap-4 cursor-default transition-all duration-300 hover:shadow-lg`}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className={`card-${fact.color} p-8 flex flex-col items-start gap-6 cursor-default transition-all duration-300 hover:shadow-2xl`}
                     style={{ 
-                      boxShadow: fact.color === 'saffron' ? '0 10px 30px -10px rgba(255,140,0,0)' : 'none'
+                      boxShadow: fact.color === 'saffron' ? '0 10px 40px -10px rgba(255,140,0,0)' : 'none'
                     }}
                   >
-                    <div className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
                       style={{
-                        background: fact.color === 'saffron' ? 'rgba(255,140,0,0.15)' : fact.color === 'blue' ? 'rgba(0,82,204,0.15)' : 'rgba(6,167,125,0.15)',
+                        background: fact.color === 'saffron' ? 'rgba(255,140,0,0.1)' : fact.color === 'blue' ? 'rgba(0,82,204,0.1)' : 'rgba(6,167,125,0.1)',
                         color: fact.color === 'saffron' ? '#FFA742' : fact.color === 'blue' ? '#6B9FFF' : '#0CC594'
                       }}>
-                      <Icon size={20} />
+                      <Icon size={28} />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{fact.title}</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">{fact.desc}</p>
+                      <h3 className="text-xl font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{fact.title}</h3>
+                      <p className="text-sm text-slate-400 leading-relaxed">{fact.desc}</p>
                     </div>
                   </motion.div>
                 );
