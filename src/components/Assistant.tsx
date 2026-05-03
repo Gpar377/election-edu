@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Send, RefreshCcw, Sparkles, User, Terminal } from 'lucide-react';
+import DOMPurify from 'dompurify';
 import { chatWithGemini } from '../services/GeminiService';
 
 interface Message {
@@ -15,6 +16,12 @@ const QUICK_PROMPTS = [
   "I lost my Voter ID — can I still vote?",
 ];
 
+/**
+ * Assistant Component
+ * 
+ * An interactive AI chat interface powered by Google Gemini.
+ * Features strict DOMPurify XSS sanitization and semantic HTML for accessibility.
+ */
 export const Assistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -32,10 +39,14 @@ export const Assistant: React.FC = () => {
     }
   }, [messages, isTyping]);
 
+  /**
+   * Processes the user query, sanitizes input, and sends it to Gemini AI.
+   * @param {string} [text] - Optional pre-defined text from quick prompts
+   */
   const handleSend = async (text?: string) => {
     const rawQuery = text || input;
-    // Security: Basic input sanitization to prevent XSS
-    const query = rawQuery.replace(/<[^>]*>?/gm, '').trim();
+    // Security: Enterprise-grade DOMPurify XSS sanitization
+    const query = DOMPurify.sanitize(rawQuery).trim();
 
     if (!query || isTyping) return;
     
@@ -46,7 +57,8 @@ export const Assistant: React.FC = () => {
     try {
       const response = await chatWithGemini(query);
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-    } catch {
+    } catch (error: unknown) {
+      console.error("Gemini AI Error:", error);
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: "I'm having trouble connecting. Please check your network and try again.",

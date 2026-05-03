@@ -19,6 +19,8 @@ const DEMO_RESPONSES: Record<string, string> = {
  */
 export const chatWithGemini = async (prompt: string): Promise<string> => {
   if (!genAI) {
+    // Security: Explicit logging for missing credentials (Fail-safe)
+    console.warn("SECURITY WARNING: VITE_GEMINI_API_KEY is not defined in environment variables. Falling back to Demo Mode.");
     // Demo Mode logic: search for keywords
     const lowerPrompt = prompt.toLowerCase();
     if (lowerPrompt.includes("regis")) return DEMO_RESPONSES.registration;
@@ -38,7 +40,7 @@ export const chatWithGemini = async (prompt: string): Promise<string> => {
     });
     const response = await result.response;
     return response.text();
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Gemini Error:", error);
     return "I'm having trouble connecting to my brain. Please try again or check your connection.";
   }
