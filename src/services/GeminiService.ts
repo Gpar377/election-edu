@@ -10,6 +10,13 @@ const DEMO_RESPONSES: Record<string, string> = {
   "station": "Polling stations are usually within 2km of your residence. You can find yours on the Voter Helpline app or the ECI website using your EPIC number."
 };
 
+/**
+ * Interacts with the @google/generative-ai SDK to provide intelligent responses.
+ * Uses the 'gemini-1.5-flash' model for fast, context-aware answers.
+ * 
+ * @param {string} prompt - The user's query regarding elections.
+ * @returns {Promise<string>} The AI-generated response.
+ */
 export const chatWithGemini = async (prompt: string): Promise<string> => {
   if (!genAI) {
     // Demo Mode logic: search for keywords

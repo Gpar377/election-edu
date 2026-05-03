@@ -33,8 +33,12 @@ export const Assistant: React.FC = () => {
   }, [messages, isTyping]);
 
   const handleSend = async (text?: string) => {
-    const query = text || input;
-    if (!query.trim() || isTyping) return;
+    const rawQuery = text || input;
+    // Security: Basic input sanitization to prevent XSS
+    const query = rawQuery.replace(/<[^>]*>?/gm, '').trim();
+
+    if (!query || isTyping) return;
+    
     const userMsg: Message = { role: 'user', content: query };
     setMessages(prev => [...prev, userMsg]);
     setInput('');

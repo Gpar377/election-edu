@@ -15,7 +15,7 @@ const COLOR_MAP = {
   teal: { bg: 'rgba(6,167,125,0.1)', border: 'rgba(6,167,125,0.25)', text: '#0CC594', icon: 'rgba(6,167,125,0.15)' },
 };
 
-export const VoterReadiness: React.FC = () => {
+const VoterReadinessComponent: React.FC = () => {
   const [completed, setCompleted] = useState<string[]>([]);
 
   const toggleTask = (id: string) => {
@@ -166,3 +166,5 @@ export const VoterReadiness: React.FC = () => {
     </div>
   );
 };
+
+export const VoterReadiness = React.memo(VoterReadinessComponent);

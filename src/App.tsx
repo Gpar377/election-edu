@@ -6,13 +6,35 @@ import { PollingLocator } from './components/PollingLocator';
 import { VoterReadiness } from './components/VoterReadiness';
 import { Vote, ArrowRight, ShieldCheck, Globe, Users, FileText, HelpCircle } from 'lucide-react';
 
-const STATS = [
+interface StatItem {
+  value: string;
+  label: string;
+  color: 'saffron' | 'blue' | 'teal';
+  delay: number;
+}
+
+const STATS: StatItem[] = [
   { value: '96.8Cr', label: 'Registered Voters', color: 'saffron', delay: 0.5 },
   { value: '10.5L', label: 'Polling Stations', color: 'blue', delay: 0.6 },
   { value: '543', label: 'Lok Sabha Seats', color: 'teal', delay: 0.7 },
 ];
 
-const FloatingOrb = ({ color, size, top, left, delay, duration }: any) => (
+const QUICK_FACTS = [
+  { icon: Users, title: 'Who Can Vote?', desc: 'Any Indian citizen aged 18+ enrolled in the electoral roll of their constituency.', color: 'saffron' },
+  { icon: ShieldCheck, title: 'Valid ID Documents', desc: 'EPIC Card, Aadhaar, Passport, Driving Licence, or any ECI-approved document.', color: 'blue' },
+  { icon: Vote, title: 'Polling Hours', desc: 'Generally 7 AM – 6 PM on polling day. Check ECI for constituency-specific timings.', color: 'teal' },
+];
+
+interface FloatingOrbProps {
+  color: string;
+  size: string;
+  top: string;
+  left: string;
+  delay: number;
+  duration: number;
+}
+
+const FloatingOrb: React.FC<FloatingOrbProps> = ({ color, size, top, left, delay, duration }) => (
   <motion.div
     className="absolute rounded-full mix-blend-screen filter blur-[80px] opacity-30"
     style={{ background: color, width: size, height: size, top, left }}
@@ -166,15 +188,17 @@ function App() {
                   whileHover={{ scale: 1.05, y: -2, boxShadow: '0 10px 30px -10px rgba(255, 140, 0, 0.6)' }}
                   whileTap={{ scale: 0.98 }}
                   className="btn-primary group"
+                  aria-label="Check your voter readiness"
                 >
-                  Check Your Readiness <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                  Check Your Readiness <ArrowRight size={16} aria-hidden="true" className="transition-transform group-hover:translate-x-1" />
                 </motion.button>
                 <motion.button 
                   whileHover={{ scale: 1.05, y: -2, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
                   whileTap={{ scale: 0.98 }}
                   className="btn-secondary group"
+                  aria-label="Find polling booth near you"
                 >
-                  <Globe size={16} className="transition-transform group-hover:rotate-12" /> Find Polling Booth
+                  <Globe size={16} aria-hidden="true" className="transition-transform group-hover:rotate-12" /> Find Polling Booth
                 </motion.button>
               </motion.div>
 
@@ -269,11 +293,7 @@ function App() {
         <section className="py-20 px-8 border-t border-b border-white/5" style={{ background: 'rgba(0,53,128,0.05)' }}>
           <div className="container max-w-6xl">
             <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { icon: Users, title: 'Who Can Vote?', desc: 'Any Indian citizen aged 18+ enrolled in the electoral roll of their constituency.', color: 'saffron' },
-                { icon: ShieldCheck, title: 'Valid ID Documents', desc: 'EPIC Card, Aadhaar, Passport, Driving Licence, or any ECI-approved document.', color: 'blue' },
-                { icon: Vote, title: 'Polling Hours', desc: 'Generally 7 AM – 6 PM on polling day. Check ECI for constituency-specific timings.', color: 'teal' },
-              ].map((fact) => {
+              {QUICK_FACTS.map((fact) => {
                 const Icon = fact.icon;
                 return (
                   <motion.div 
