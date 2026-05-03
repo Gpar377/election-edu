@@ -27,6 +27,9 @@ const QUICK_FACTS = [
   { icon: Vote, title: 'Polling Hours', desc: 'Generally 7 AM – 6 PM on polling day. Check ECI for constituency-specific timings.', color: 'teal' },
 ];
 
+/**
+ * Props for the FloatingOrb decorative component.
+ */
 interface FloatingOrbProps {
   color: string;
   size: string;
@@ -36,6 +39,10 @@ interface FloatingOrbProps {
   duration: number;
 }
 
+/**
+ * FloatingOrb Component
+ * Renders an animated, glowing orb for background aesthetics.
+ */
 const FloatingOrb: React.FC<FloatingOrbProps> = ({ color, size, top, left, delay, duration }) => (
   <motion.div
     className="absolute rounded-full mix-blend-screen filter blur-[80px] opacity-30"
@@ -50,6 +57,12 @@ const FloatingOrb: React.FC<FloatingOrbProps> = ({ color, size, top, left, delay
   />
 );
 
+/**
+ * Main Application Component
+ * 
+ * Orchestrates the overall layout, scrolling animations, and lazy-loads
+ * heavy interactive components (Assistant, Timeline, PollingLocator, VoterReadiness).
+ */
 function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
