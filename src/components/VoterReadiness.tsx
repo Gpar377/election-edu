@@ -15,6 +15,12 @@ const COLOR_MAP = {
   teal: { bg: 'rgba(6,167,125,0.1)', border: 'rgba(6,167,125,0.25)', text: '#0CC594', icon: 'rgba(6,167,125,0.15)' },
 };
 
+/**
+ * VoterReadinessComponent
+ * 
+ * Interactive checklist allowing users to track their preparation for voting day.
+ * Includes dynamic progress calculations and accessibility labels.
+ */
 const VoterReadinessComponent: React.FC = () => {
   const [completed, setCompleted] = useState<string[]>([]);
 

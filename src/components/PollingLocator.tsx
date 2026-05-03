@@ -13,6 +13,12 @@ const statusConfig = {
   Moderate: { color: '#FFA742', bg: 'rgba(255,167,66,0.1)', border: 'rgba(255,167,66,0.25)', dot: '#FFA742' },
 };
 
+/**
+ * PollingLocator Component
+ * 
+ * Provides an interactive UI to find nearby polling stations, view crowd status,
+ * and get directions. Includes an accessible search interface.
+ */
 export const PollingLocator: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<number | null>(null);

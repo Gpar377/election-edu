@@ -11,6 +11,12 @@ const STEPS = [
   { id: '05', title: 'Results', desc: 'Votes counted; winners declared by the ECI.', icon: BarChart3, color: '#6B9FFF' },
 ];
 
+/**
+ * Timeline Component
+ * 
+ * Visually represents the sequential stages of the Indian democratic process.
+ * Features staggered entrance animations using Framer Motion.
+ */
 export const Timeline: React.FC = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-50px' });
