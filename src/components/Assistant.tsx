@@ -102,7 +102,7 @@ export const Assistant: React.FC = () => {
       )}
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-4" aria-live="polite" aria-atomic="false">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div

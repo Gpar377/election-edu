@@ -1,10 +1,12 @@
+import React, { Suspense } from 'react';
 import { motion, useScroll, useSpring, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Assistant } from './components/Assistant';
-import { Timeline } from './components/Timeline';
-import { PollingLocator } from './components/PollingLocator';
-import { VoterReadiness } from './components/VoterReadiness';
 import { Vote, ArrowRight, ShieldCheck, Globe, Users, FileText, HelpCircle } from 'lucide-react';
+
+const Assistant = React.lazy(() => import('./components/Assistant').then(module => ({ default: module.Assistant })));
+const Timeline = React.lazy(() => import('./components/Timeline').then(module => ({ default: module.Timeline })));
+const PollingLocator = React.lazy(() => import('./components/PollingLocator').then(module => ({ default: module.PollingLocator })));
+const VoterReadiness = React.lazy(() => import('./components/VoterReadiness').then(module => ({ default: module.VoterReadiness })));
 
 interface StatItem {
   value: string;
@@ -239,7 +241,9 @@ function App() {
               <h2 className="heading-serif text-4xl text-white mb-4">Voter Readiness Dashboard</h2>
               <p className="text-lg text-slate-400 max-w-2xl">Track your preparedness before polling day to ensure a smooth and hassle-free voting experience.</p>
             </div>
-            <VoterReadiness />
+            <Suspense fallback={<div className="h-40 flex items-center justify-center text-slate-500">Loading Readiness Dashboard...</div>}>
+              <VoterReadiness />
+            </Suspense>
           </div>
         </section>
 
@@ -254,7 +258,9 @@ function App() {
               <p className="text-lg text-slate-400 max-w-2xl">From voter registration to result declaration — every stage of India's democratic process, explained clearly.</p>
               <div className="tricolor-bar w-32 mt-8" />
             </div>
-            <Timeline />
+            <Suspense fallback={<div className="h-40 flex items-center justify-center text-slate-500">Loading Timeline...</div>}>
+              <Timeline />
+            </Suspense>
           </div>
         </section>
 
@@ -271,7 +277,9 @@ function App() {
                   <h2 className="heading-serif text-4xl text-white mb-4">Find Your Booth</h2>
                   <p className="text-slate-400 text-lg leading-relaxed">Real-time polling station discovery with live crowd estimates and seamless navigation to ensure you avoid the rush.</p>
                 </div>
-                <PollingLocator />
+                <Suspense fallback={<div className="h-64 flex items-center justify-center text-slate-500">Loading Map Data...</div>}>
+                  <PollingLocator />
+                </Suspense>
               </div>
 
               {/* AI Assistant */}
@@ -283,7 +291,9 @@ function App() {
                   <h2 className="heading-serif text-4xl text-white mb-4">Ask Your AI Guide</h2>
                   <p className="text-slate-400 text-lg leading-relaxed">Your personal expert on voter rights, election laws, and candidate information — available instantly to clarify any doubts.</p>
                 </div>
-                <Assistant />
+                <Suspense fallback={<div className="h-64 flex items-center justify-center text-slate-500">Loading Gemini AI...</div>}>
+                  <Assistant />
+                </Suspense>
               </div>
             </div>
           </div>
